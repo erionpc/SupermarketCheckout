@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FCFD8D0A-1F93-46E4-86CD-29494E89D5BC}"
 	ProjectSection(SolutionItems) = preProject
-		..\demo env.postman_environment.json = ..\demo env.postman_environment.json
+		..\env.postman_environment.json = ..\env.postman_environment.json
 		..\README.md = ..\README.md
 		..\SupermarketCheckout.postman_collection.json = ..\SupermarketCheckout.postman_collection.json
 	EndProjectSection

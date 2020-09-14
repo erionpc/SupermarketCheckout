@@ -36,6 +36,6 @@ There are unit tests based on xUnit which test the main logic with several input
 The database is seeded with demo data upon start-up.
 <br/><br/>
 To test the solution use PostMan (or any REST client). A PostMan collection and environment is supplied for this:<br/>
-[SupermarketCheckout.postman_collection.](SupermarketCheckout.postman_collection.json)<br/>
-[demo env.postman_environment.json](demo env.postman_environment.json)
+[SupermarketCheckout.postman_collection.json](SupermarketCheckout.postman_collection.json)<br/>
+[env.postman_environment.json](demo env.postman_environment.json)
 
