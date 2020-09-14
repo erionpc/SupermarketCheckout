@@ -4,10 +4,10 @@ Conceptual solution for a supermarket checkout
 The aim of this project is to demonstrate Production Ready Good Quality code in implementing a supermarket checkout that calculates 
 the total price of a number of items. 
 
-In a normal supermarket, things are identified using Stock Keeping Units, or SKUs. In our store, we’ll use individual letters of the 
-alphabet (A, B, C, and so on). Our goods are priced individually. In addition, some items are multipriced: buy n of them, and they’ll 
-cost you y pounds. For example, item ‘A’ might cost 50 pounds individually, but this week we have a special offer: buy three ‘A’s and 
-they’ll cost you 130. There can also be multiple offers for the same item. The test data is as follows:
+In a normal supermarket, things are identified using Stock Keeping Units, or SKUs. In our store, weâ€™ll use individual letters of the 
+alphabet (A, B, C, and so on). Our goods are priced individually. In addition, some items are multipriced: buy n of them, and theyâ€™ll 
+cost you y pounds. For example, item â€˜Aâ€™ might cost 50 pounds individually, but this week we have a special offer: buy three â€˜Aâ€™s and 
+theyâ€™ll cost you 130. There can also be multiple offers for the same item. The test data is as follows:
 <br/><br/>
 
 | Item | Price | Offer                            | 
@@ -17,7 +17,7 @@ they’ll cost you 130. There can also be multiple offers for the same item. The t
 | C    | 20    |                                  |
 | D    | 15    |                                  |
 <br/>
-Our checkout accepts items in any order, so that if we scan a B, an A, and another B, we’ll recognize the two B’s and price them at 45 
+Our checkout accepts items in any order, so that if we scan a B, an A, and another B, weâ€™ll recognize the two Bâ€™s and price them at 45 
 (for a total price so far of 95).
 <br/><br/>
 
@@ -31,7 +31,7 @@ The CheckoutService class composes the receipt on the basis of the items in the 
 The BasketItemsController can be used to add 1 item at a time to the basket.
 The BasketController can be used to create a new basket.
 <br/><br/>
-The solution is a RESTful web-api based on ASP.NET Core, Entity Framework Core and SqlServer (localdb).
+The solution is a RESTful web-api based on ASP.NET Core (.Net Core 3.1), Entity Framework Core and SqlServer (localdb).
 There are unit tests based on xUnit which test the main logic with several input scenarios.
 The database is seeded with demo data upon start-up.
 <br/><br/>
