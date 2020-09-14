@@ -10,12 +10,12 @@ cost you y pounds. For example, item ‘A’ might cost 50 pounds individually, but 
 they’ll cost you 130. There can also be multiple offers for the same item. The test data is as follows:
 <br/><br/>
 
-| Item | #Price  | #Offer                           | 
-| :---:| :-:     | :-:                              |
-| A    | 50      | 3 for 130, 4 for 160, 5 for 180  |
-| B    | 30      | 2 for 40                         |
-| C    | 20      |                                  |
-| D    | 15      |                                  |
+| Item | Price | Offer                            | 
+| :---:| :----:| :------------------------------: |
+| A    | 50    | 3 for 130, 4 for 160, 5 for 180  |
+| B    | 30    | 2 for 40                         |
+| C    | 20    |                                  |
+| D    | 15    |                                  |
 <br/>
 Our checkout accepts items in any order, so that if we scan a B, an A, and another B, we’ll recognize the two B’s and price them at 45 
 (for a total price so far of 95).
