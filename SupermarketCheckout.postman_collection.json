@@ -1,17 +1,56 @@
 {
 	"info": {
-		"_postman_id": "ce02eb6c-329c-467e-be2c-c3e3b0c96ef7",
+		"_postman_id": "55198fba-e122-497f-930c-2e8a1a7274ce",
 		"name": "SupermarketCheckout",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Get items",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "10b16d8c-0606-4218-8d59-328e03bf61db",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"basketId\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "ACCEPT",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "Create basket",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "20c80144-79e5-40d0-b4b0-bad6687dcfb5",
+						"id": "2983c1bc-8a45-4290-afda-0438563103f0",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);\r",
 							"postman.setEnvironmentVariable(\"basketId\", jsonData.id);"

@@ -40,4 +40,9 @@ To test the solution, run the web-api as a stand-alone app and use PostMan (or a
 [env.postman_environment.json](env.postman_environment.json)
 <br/><br/>
 In order for the urls to match the PostMan collection, please use the "Checkout.Server" launch option, not IIS Express.
+<br/><br/>
+Upon startup the app launches the url for displaying the inventory of items in the shop, to make sure that the demo data has been correctly inserted in the database.<br/>
+http://localhost:5000/api/items
+
+
 
