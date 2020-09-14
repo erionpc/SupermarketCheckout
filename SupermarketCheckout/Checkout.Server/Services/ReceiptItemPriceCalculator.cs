@@ -37,7 +37,7 @@ namespace Checkout.Server.Services
             var priceForExactQuantity = prices.FirstOrDefault(p => p.Quantity == quantity);
             if (priceForExactQuantity != null)
             {
-                return new Tuple<decimal, string>(priceForExactQuantity.Amount, $"{quantity} for {priceForExactQuantity.Amount}");
+                return new Tuple<decimal, string>(priceForExactQuantity.Amount, getOfferText(quantity, priceForExactQuantity.Amount));
             }
 
             _itemPrices = new List<ItemPriceDto>(prices);
@@ -96,7 +96,10 @@ namespace Checkout.Server.Services
             getPriceByLargestQuantity(prices, quantity, ref price, ref offer);
         }
 
+        private static string getOfferText(int quantity, decimal amount) =>
+            $"{quantity} for {amount}";
+
         private static void setOfferText(int quantity, decimal amount, ref string offer) => 
-            offer = offer != null ? "multiple offers applied" : $"{quantity} for {amount}";
+            offer = offer != null ? "multiple offers applied" : getOfferText(quantity, amount);
     }
 }
