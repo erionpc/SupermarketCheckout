@@ -35,7 +35,7 @@ The solution is a RESTful web-api based on ASP.NET Core, Entity Framework Core a
 There are unit tests based on xUnit which test the main logic with several input scenarios.
 The database is seeded with demo data upon start-up.
 <br/><br/>
-To test the solution use PostMan (or any REST client). A PostMan collection and environment is supplied for this:<br/>
+To test the solution, run the web-api app and use PostMan (or any REST client). A PostMan collection and environment is supplied for this:<br/>
 [SupermarketCheckout.postman_collection.json](SupermarketCheckout.postman_collection.json)<br/>
 [env.postman_environment.json](env.postman_environment.json)
 
