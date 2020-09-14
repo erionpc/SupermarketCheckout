@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "ce02eb6c-329c-467e-be2c-c3e3b0c96ef7",
+		"name": "SupermarketCheckout",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create basket",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "20c80144-79e5-40d0-b4b0-bad6687dcfb5",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"basketId\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "ACCEPT",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"posId\": \"59CC636E-7359-4694-AAEC-B3EB0F9023E1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/basket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"basket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add to basket - A",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "ACCEPT",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"A\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/basket/{{basketId}}/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"basket",
+						"{{basketId}}",
+						"items"
+					]
+				},
+				"description": "Add item A to basket"
+			},
+			"response": []
+		},
+		{
+			"name": "Add to basket - B",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "ACCEPT",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"B\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/basket/{{basketId}}/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"basket",
+						"{{basketId}}",
+						"items"
+					]
+				},
+				"description": "Add item B to basket"
+			},
+			"response": []
+		},
+		{
+			"name": "Add to basket - C",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "ACCEPT",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"C\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/basket/{{basketId}}/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"basket",
+						"{{basketId}}",
+						"items"
+					]
+				},
+				"description": "Add item C to basket"
+			},
+			"response": []
+		},
+		{
+			"name": "Add to basket - D",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "ACCEPT",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"D\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/basket/{{basketId}}/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"basket",
+						"{{basketId}}",
+						"items"
+					]
+				},
+				"description": "Add item D to basket"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
