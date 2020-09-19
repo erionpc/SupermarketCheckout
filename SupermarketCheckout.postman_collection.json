@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "55198fba-e122-497f-930c-2e8a1a7274ce",
+		"_postman_id": "3ecd39e7-6371-4f10-b77a-1f058183d6f9",
 		"name": "SupermarketCheckout",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "10b16d8c-0606-4218-8d59-328e03bf61db",
+						"id": "1741eba0-a36b-4001-8a7e-115412263e29",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);\r",
 							"postman.setEnvironmentVariable(\"basketId\", jsonData.id);"
@@ -50,7 +50,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2983c1bc-8a45-4290-afda-0438563103f0",
+						"id": "8be20fbd-85c6-49e8-932c-5e6e3ac90a11",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);\r",
 							"postman.setEnvironmentVariable(\"basketId\", jsonData.id);"
@@ -241,6 +241,64 @@
 					]
 				},
 				"description": "Add item D to basket"
+			},
+			"response": []
+		},
+		{
+			"name": "Checkout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "ACCEPT",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/basket/{{basketId}}/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"basket",
+						"{{basketId}}",
+						"checkout"
+					]
+				},
+				"description": "Close basket and return receipt"
+			},
+			"response": []
+		},
+		{
+			"name": "Reopen basket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "ACCEPT",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/basket/{{basketId}}/reopen",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"basket",
+						"{{basketId}}",
+						"reopen"
+					]
+				},
+				"description": "Reopen basket and delete any receipt items"
 			},
 			"response": []
 		}

@@ -9,6 +9,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200912224801_InitialMigration.cs" />
     <Compile Remove="Migrations\20200912224801_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200919220059_AddedReceiptItemEntity.cs" />
+    <Compile Remove="Migrations\20200919220059_AddedReceiptItemEntity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

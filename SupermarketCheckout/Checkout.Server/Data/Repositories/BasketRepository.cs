@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Internal;
+using Z.EntityFramework.Plus;
 
 namespace Checkout.Server.Data.Repositories
 {
@@ -21,6 +22,9 @@ namespace Checkout.Server.Data.Repositories
 
         public Task<bool> Exists(Guid id) =>
             _context.Baskets.AnyAsync(x => x.Id == id);
+
+        public Task<Basket> GetBasket(Guid id) =>
+            _context.Baskets.FirstOrDefaultAsync(x => x.Id == id);
 
         public Task<Basket> GetFullBasket(Guid id) =>
             _context.Baskets.Include(x => x.BasketItems)
@@ -57,6 +61,36 @@ namespace Checkout.Server.Data.Repositories
             basketItem.Item = null;
 
             return _context.BasketItems.AddAsync(basketItem);
+        }
+
+        public void CheckoutBasket(Basket basketEntity, decimal totalPrice, ICollection<ReceiptItem> receiptItems)
+        {
+            if (basketEntity == null)
+            {
+                throw new ArgumentNullException(nameof(basketEntity));
+            }
+            if (receiptItems == null)
+            {
+                throw new ArgumentNullException(nameof(receiptItems));
+            }
+            if (!receiptItems.Any())
+            {
+                throw new CheckoutException("Cannot checkout an empty basket");
+            }
+
+            basketEntity.Status = Entities.Enums.BasketStatus.Checkout;
+            basketEntity.TotalPrice = totalPrice;
+            basketEntity.ClosedOn = DateTime.Now;
+            basketEntity.ReceiptItems = receiptItems;
+        }
+
+        public void ReopenBasket(Basket basketEntity)
+        {
+            if (basketEntity == null)
+            {
+                throw new ArgumentNullException(nameof(basketEntity));
+            }
+            basketEntity.Status = Entities.Enums.BasketStatus.Active;
         }
 
         public Task Save() =>

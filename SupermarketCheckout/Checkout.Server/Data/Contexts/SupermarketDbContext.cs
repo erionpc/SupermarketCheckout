@@ -21,6 +21,8 @@ namespace Checkout.Server.Data.Contexts
 
         public DbSet<BasketItem> BasketItems { get; set; }
 
+        public DbSet<ReceiptItem> ReceiptItems { get; set; }
+
         public SupermarketDbContext(DbContextOptions<SupermarketDbContext> options)
            : base(options)
         {

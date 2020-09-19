@@ -32,6 +32,7 @@ namespace Checkout.Server.Services
             var receiptItems = basketItems.GroupBy(x => x.Item.SKU)
                                           .Select(x => new
                                           {
+                                              ItemId = x.First().Item.Id,
                                               SKU = x.Key,
                                               Description = x.First().Item.Description,
                                               Quantity = x.Count(),
@@ -39,6 +40,7 @@ namespace Checkout.Server.Services
                                           })
                                           .Select(x => new ReceiptItemDto()
                                           {
+                                              ItemId = x.ItemId,
                                               SKU = x.SKU,
                                               Description = x.Description,
                                               Quantity = x.Quantity,

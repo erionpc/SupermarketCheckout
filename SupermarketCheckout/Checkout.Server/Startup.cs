@@ -35,8 +35,8 @@ namespace Checkout.Server
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IItemsRepository, ItemsRepository>();
-
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<IReceiptItemsRepository, ReceiptItemsRepository>();
 
             services.AddScoped<ICheckoutService, CheckoutService>();
 

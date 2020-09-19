@@ -1,4 +1,5 @@
 ﻿using Checkout.Server.Data.Entities;
+using Checkout.Server.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,13 @@ namespace Checkout.Server.Data.Repositories
 
         Task<bool> Exists(Guid id);
 
+        Task<Basket> GetBasket(Guid id);
+
         Task<Basket> GetFullBasket(Guid id);
+
+        void CheckoutBasket(Basket basketEntity, decimal totalPrice, ICollection<ReceiptItem> receiptItems);
+
+        void ReopenBasket(Basket basketEntity);
 
         Task Save();
     }
