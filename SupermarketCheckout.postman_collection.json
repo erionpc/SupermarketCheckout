@@ -9,7 +9,7 @@
 			"name": "Authentication",
 			"item": [
 				{
-					"name": "Login Pos1",
+					"name": "Login pos1",
 					"event": [
 						{
 							"listen": "test",
@@ -42,12 +42,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{checkout.auth}}/authenticate/login",
+							"raw": "{{checkout.auth}}/authentication/login",
 							"host": [
 								"{{checkout.auth}}"
 							],
 							"path": [
-								"authenticate",
+								"authentication",
 								"login"
 							]
 						}
@@ -55,7 +55,7 @@
 					"response": []
 				},
 				{
-					"name": "Login Admin",
+					"name": "Login superadmin",
 					"event": [
 						{
 							"listen": "test",
@@ -88,12 +88,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{checkout.auth}}/authenticate/login",
+							"raw": "{{checkout.auth}}/authentication/login",
 							"host": [
 								"{{checkout.auth}}"
 							],
 							"path": [
-								"authenticate",
+								"authentication",
 								"login"
 							]
 						}
@@ -131,12 +131,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{checkout.auth}}/authenticate/register",
+							"raw": "{{checkout.auth}}/authentication/register",
 							"host": [
 								"{{checkout.auth}}"
 							],
 							"path": [
-								"authenticate",
+								"authentication",
 								"register"
 							]
 						}
@@ -174,12 +174,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{checkout.auth}}/authenticate/register-admin",
+							"raw": "{{checkout.auth}}/authentication/register-admin",
 							"host": [
 								"{{checkout.auth}}"
 							],
 							"path": [
-								"authenticate",
+								"authentication",
 								"register-admin"
 							]
 						}

@@ -19,14 +19,14 @@ using Checkout.Shared;
 namespace Checkout.Identity.Controllers
 {
     [ApiController]
-    [Route("api/authenticate")]
-    public class AuthenticateController : ControllerBase
+    [Route("api/authentication")]
+    public class AuthenticationController : ControllerBase
     {
         private readonly IAuthService _authService;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public AuthenticateController(IAuthService authService, 
+        public AuthenticationController(IAuthService authService, 
                                       IConfiguration configuration,
                                       IMapper mapper)
         {
