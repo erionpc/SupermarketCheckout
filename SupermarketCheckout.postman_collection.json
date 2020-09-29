@@ -6,301 +6,551 @@
 	},
 	"item": [
 		{
-			"name": "Get items",
-			"event": [
+			"name": "Authentication",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "1741eba0-a36b-4001-8a7e-115412263e29",
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);\r",
-							"postman.setEnvironmentVariable(\"basketId\", jsonData.id);"
+					"name": "Login Pos1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d6aefd0-5788-4d52-ba8b-179221e60531",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"posToken\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
 						],
-						"type": "text/javascript"
-					}
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"pos1\",\r\n    \"password\": \"HA6Ly9sb2NhbGhvc3Q6_NTAwMCJ9\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.auth}}/authenticate/login",
+							"host": [
+								"{{checkout.auth}}"
+							],
+							"path": [
+								"authenticate",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9655a7b0-c87f-4a20-9810-f938f44db473",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"adminToken\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"superadmin\",\r\n    \"password\": \"y8yMDA1LzA1L2lkZW50aXR5L_2NsYWl\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.auth}}/authenticate/login",
+							"host": [
+								"{{checkout.auth}}"
+							],
+							"path": [
+								"authenticate",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register pos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"pos2\",\r\n    \"password\": \"!pos2Addas\",\r\n    \"email\": \"pos2@mailinator.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.auth}}/authenticate/register",
+							"host": [
+								"{{checkout.auth}}"
+							],
+							"path": [
+								"authenticate",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin2\",\r\n    \"password\": \"2ndAdmin!\",\r\n    \"email\": \"admin2@mailinator.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.auth}}/authenticate/register-admin",
+							"host": [
+								"{{checkout.auth}}"
+							],
+							"path": [
+								"authenticate",
+								"register-admin"
+							]
+						}
+					},
+					"response": []
 				}
 			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "ACCEPT",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:5000/api/items",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"items"
-					]
-				}
-			},
-			"response": []
+			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Create basket",
-			"event": [
+			"name": "Basket",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "8be20fbd-85c6-49e8-932c-5e6e3ac90a11",
-						"exec": [
-							"var jsonData = JSON.parse(responseBody);\r",
-							"postman.setEnvironmentVariable(\"basketId\", jsonData.id);"
+					"name": "Get items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1741eba0-a36b-4001-8a7e-115412263e29",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{posToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "ACCEPT",
+								"type": "text",
+								"value": "application/json"
+							}
 						],
-						"type": "text/javascript"
-					}
+						"url": {
+							"raw": "{{checkout.server}}/items",
+							"host": [
+								"{{checkout.server}}"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create basket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8be20fbd-85c6-49e8-932c-5e6e3ac90a11",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"basketId\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{posToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "ACCEPT",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"posId\": \"59CC636E-7359-4694-AAEC-B3EB0F9023E1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.server}}/basket",
+							"host": [
+								"{{checkout.server}}"
+							],
+							"path": [
+								"basket"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to basket - A",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{posToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "ACCEPT",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"A\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.server}}/basket/{{basketId}}/items",
+							"host": [
+								"{{checkout.server}}"
+							],
+							"path": [
+								"basket",
+								"{{basketId}}",
+								"items"
+							]
+						},
+						"description": "Add item A to basket"
+					},
+					"response": []
+				},
+				{
+					"name": "Add to basket - B",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{posToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "ACCEPT",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"B\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.server}}/basket/{{basketId}}/items",
+							"host": [
+								"{{checkout.server}}"
+							],
+							"path": [
+								"basket",
+								"{{basketId}}",
+								"items"
+							]
+						},
+						"description": "Add item B to basket"
+					},
+					"response": []
+				},
+				{
+					"name": "Add to basket - C",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{posToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "ACCEPT",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"C\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.server}}/basket/{{basketId}}/items",
+							"host": [
+								"{{checkout.server}}"
+							],
+							"path": [
+								"basket",
+								"{{basketId}}",
+								"items"
+							]
+						},
+						"description": "Add item C to basket"
+					},
+					"response": []
+				},
+				{
+					"name": "Add to basket - D",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{posToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "ACCEPT",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"D\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{checkout.server}}/basket/{{basketId}}/items",
+							"host": [
+								"{{checkout.server}}"
+							],
+							"path": [
+								"basket",
+								"{{basketId}}",
+								"items"
+							]
+						},
+						"description": "Add item D to basket"
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{posToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "ACCEPT",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{checkout.server}}/basket/{{basketId}}/checkout",
+							"host": [
+								"{{checkout.server}}"
+							],
+							"path": [
+								"basket",
+								"{{basketId}}",
+								"checkout"
+							]
+						},
+						"description": "Close basket and return receipt"
+					},
+					"response": []
+				},
+				{
+					"name": "Reopen basket",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{posToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "ACCEPT",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{checkout.server}}/basket/{{basketId}}/reopen",
+							"host": [
+								"{{checkout.server}}"
+							],
+							"path": [
+								"basket",
+								"{{basketId}}",
+								"reopen"
+							]
+						},
+						"description": "Reopen basket and delete any receipt items"
+					},
+					"response": []
 				}
 			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "ACCEPT",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"posId\": \"59CC636E-7359-4694-AAEC-B3EB0F9023E1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5000/api/basket",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"basket"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add to basket - A",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "ACCEPT",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"A\"\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5000/api/basket/{{basketId}}/items",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"basket",
-						"{{basketId}}",
-						"items"
-					]
-				},
-				"description": "Add item A to basket"
-			},
-			"response": []
-		},
-		{
-			"name": "Add to basket - B",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "ACCEPT",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"B\"\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5000/api/basket/{{basketId}}/items",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"basket",
-						"{{basketId}}",
-						"items"
-					]
-				},
-				"description": "Add item B to basket"
-			},
-			"response": []
-		},
-		{
-			"name": "Add to basket - C",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "ACCEPT",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"C\"\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5000/api/basket/{{basketId}}/items",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"basket",
-						"{{basketId}}",
-						"items"
-					]
-				},
-				"description": "Add item C to basket"
-			},
-			"response": []
-		},
-		{
-			"name": "Add to basket - D",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "ACCEPT",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"item\": \r\n    {\r\n        \"sku\": \"D\"\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5000/api/basket/{{basketId}}/items",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"basket",
-						"{{basketId}}",
-						"items"
-					]
-				},
-				"description": "Add item D to basket"
-			},
-			"response": []
-		},
-		{
-			"name": "Checkout",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "ACCEPT",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:5000/api/basket/{{basketId}}/checkout",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"basket",
-						"{{basketId}}",
-						"checkout"
-					]
-				},
-				"description": "Close basket and return receipt"
-			},
-			"response": []
-		},
-		{
-			"name": "Reopen basket",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "ACCEPT",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:5000/api/basket/{{basketId}}/reopen",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"basket",
-						"{{basketId}}",
-						"reopen"
-					]
-				},
-				"description": "Reopen basket and delete any receipt items"
-			},
-			"response": []
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}

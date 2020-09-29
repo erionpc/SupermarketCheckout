@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Checkout.Server.Migrations
+namespace Checkout.Server.Data.Migrations
 {
     [DbContext(typeof(SupermarketDbContext))]
     [Migration("20200914084909_InitialMigration")]

@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Checkout.Server.Data.Repositories;
 using Checkout.Server.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Checkout.Shared;
 
 namespace Checkout.Server.Controllers
 {
+    [Authorize(Roles = UserRoles.Pos)]
     [ApiController]
     [Route("api/items")]
     public class ItemsController : ControllerBase

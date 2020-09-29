@@ -9,9 +9,12 @@ using Checkout.Server.Data.Repositories;
 using Checkout.Server.Models;
 using Checkout.Server.Services;
 using Checkout.Server.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Checkout.Shared;
 
 namespace Checkout.Server.Controllers
 {
+    [Authorize(Roles = UserRoles.Pos)]
     [ApiController]
     [Route("api/basket")]
     public class BasketController : ControllerBase

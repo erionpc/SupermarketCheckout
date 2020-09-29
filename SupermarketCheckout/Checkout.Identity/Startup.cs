@@ -11,16 +11,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Checkout.Server.Data.Contexts;
-using Checkout.Server.Data.Repositories;
-using Checkout.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Checkout.Identity.Data.Contexts;
+using Checkout.Identity.Models;
+using Checkout.Identity.Services;
 
-namespace Checkout.Server
+namespace Checkout.Identity
 {
     public class Startup
     {
@@ -38,31 +37,27 @@ namespace Checkout.Server
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddScoped<IItemsRepository, ItemsRepository>();
-            services.AddScoped<IBasketRepository, BasketRepository>();
-            services.AddScoped<IReceiptItemsRepository, ReceiptItemsRepository>();
+            services.AddTransient<IAuthService, MicrosoftIdentityAuthService>();
 
-            services.AddScoped<ICheckoutService, CheckoutService>();
-
-            services.AddTransient<IReceiptItemPriceCalculator, ReceiptItemPriceCalculator>();
-
-            services.AddDbContext<SupermarketDbContext>(options =>
+            services.AddDbContext<AuthDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("supermarketDb"));
+                options.UseSqlServer(Configuration.GetConnectionString("supermarketAuthDb"));
             });
 
-            // Adding Authentication
-            setupJWTServices(services);
-        }
+            // identity management
+            services.AddIdentity<ApplicationUserDto, IdentityRole>()
+                .AddEntityFrameworkStores<AuthDbContext>()
+                .AddDefaultTokenProviders();
 
-        private void setupJWTServices(IServiceCollection services)
-        {
+            // Adding Authentication  
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+
+            // Adding Jwt Bearer  
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
@@ -88,13 +83,6 @@ namespace Checkout.Server
                     }
                 };
             });
-
-            services.AddAuthorization(options =>
-                options.AddPolicy("ValidAccessToken", policy =>
-                {
-                    policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
-                    policy.RequireAuthenticatedUser();
-                }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

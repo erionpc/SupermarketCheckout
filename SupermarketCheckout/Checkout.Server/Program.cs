@@ -23,13 +23,13 @@ namespace Checkout.Server
             {
                 try
                 {
-                    var context = scope.ServiceProvider.GetService<SupermarketDbContext>();
-                    context.Database.Migrate();
+                    var supermarketDbContext = scope.ServiceProvider.GetService<SupermarketDbContext>();
+                    supermarketDbContext.Database.Migrate();
                 }
                 catch (Exception ex)
                 {
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while migrating the database.");
+                    logger.LogError(ex, "An error occurred while migrating the databases.");
                 }
             }
 

@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +9,12 @@ using Checkout.Server.Data.Repositories;
 using Checkout.Server.Models;
 using Checkout.Server.Services;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using Checkout.Shared;
 
 namespace Checkout.Server.Controllers
 {
+    [Authorize(Roles = UserRoles.Pos)]
     [ApiController]
     [Route("api/basket/{basketId}/items")]
     public class BasketItemsController : ControllerBase
