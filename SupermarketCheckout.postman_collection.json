@@ -42,9 +42,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{checkout.auth}}/authentication/login",
+							"raw": "{{checkout.identity}}/authentication/login",
 							"host": [
-								"{{checkout.auth}}"
+								"{{checkout.identity}}"
 							],
 							"path": [
 								"authentication",
@@ -88,9 +88,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{checkout.auth}}/authentication/login",
+							"raw": "{{checkout.identity}}/authentication/login",
 							"host": [
-								"{{checkout.auth}}"
+								"{{checkout.identity}}"
 							],
 							"path": [
 								"authentication",
@@ -131,9 +131,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{checkout.auth}}/authentication/register",
+							"raw": "{{checkout.identity}}/authentication/register",
 							"host": [
-								"{{checkout.auth}}"
+								"{{checkout.identity}}"
 							],
 							"path": [
 								"authentication",
@@ -174,9 +174,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{checkout.auth}}/authentication/register-admin",
+							"raw": "{{checkout.identity}}/authentication/register-admin",
 							"host": [
-								"{{checkout.auth}}"
+								"{{checkout.identity}}"
 							],
 							"path": [
 								"authentication",
