@@ -66,11 +66,15 @@ namespace Checkout.Identity.Controllers
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
+            foreach (var audience in _configuration.GetSection("JWT:ValidAudiences").Get<string[]>())
+            {
+                authClaims.Add(new Claim(JwtRegisteredClaimNames.Aud, audience));
+            }
+
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddMinutes(int.Parse(_configuration["JWT:TokenExpiryMinutes"])),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
@@ -82,6 +86,7 @@ namespace Checkout.Identity.Controllers
             });
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationInfo registrationInput)
         {
@@ -103,6 +108,7 @@ namespace Checkout.Identity.Controllers
             return Ok(new AuthResponseDto(AuthResult.Success, "User created successfully!"));
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegistrationInfo registrationInput)
         {

@@ -23,12 +23,13 @@ namespace Checkout.Identity
 {
     public class Startup
     {
+        private IConfiguration _configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration ??
+                throw new ArgumentNullException(nameof(configuration));
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,7 +42,7 @@ namespace Checkout.Identity
 
             services.AddDbContext<AuthDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("supermarketAuthDb"));
+                options.UseSqlServer(_configuration.GetConnectionString("supermarketAuthDb"));
             });
 
             // identity management
@@ -67,9 +68,9 @@ namespace Checkout.Identity
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["JWT:ValidIssuer"],
-                    ValidAudience = Configuration["JWT:ValidAudience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                    ValidIssuer = _configuration["JWT:ValidIssuer"],
+                    ValidAudiences = _configuration.GetSection("JWT:ValidAudiences").Get<string[]>(),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]))
                 };
                 options.Events = new JwtBearerEvents
                 {

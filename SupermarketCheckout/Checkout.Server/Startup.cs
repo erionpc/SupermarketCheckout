@@ -24,12 +24,13 @@ namespace Checkout.Server
 {
     public class Startup
     {
+        private IConfiguration _configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration ??
+                throw new ArgumentNullException(nameof(configuration));
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,14 +42,13 @@ namespace Checkout.Server
             services.AddScoped<IItemsRepository, ItemsRepository>();
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<IReceiptItemsRepository, ReceiptItemsRepository>();
-
             services.AddScoped<ICheckoutService, CheckoutService>();
 
             services.AddTransient<IReceiptItemPriceCalculator, ReceiptItemPriceCalculator>();
 
             services.AddDbContext<SupermarketDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("supermarketDb"));
+                options.UseSqlServer(_configuration.GetConnectionString("supermarketDb"));
             });
 
             // Adding Authentication
@@ -72,9 +72,9 @@ namespace Checkout.Server
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["JWT:ValidIssuer"],
-                    ValidAudience = Configuration["JWT:ValidAudience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                    ValidIssuer = _configuration["JWT:ValidIssuer"],
+                    ValidAudiences = _configuration.GetSection("JWT:ValidAudiences").Get<string[]>(),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]))
                 };
                 options.Events = new JwtBearerEvents
                 {
