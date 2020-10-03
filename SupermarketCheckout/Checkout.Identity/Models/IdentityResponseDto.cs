@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Checkout.Identity.Models
 {
-    public class AuthResponseDto
+    public class IdentityResponseDto
     {
         public string Status => Enum.GetName(typeof(AuthResult), StatusEnum);
 
@@ -17,12 +17,12 @@ namespace Checkout.Identity.Models
 
         public string Message { get; set; }
 
-        public AuthResponseDto()
+        public IdentityResponseDto()
         {
 
         }
 
-        public AuthResponseDto(AuthResult status, string message)
+        public IdentityResponseDto(AuthResult status, string message)
         {
             this.StatusEnum = status;
             this.Message = message;

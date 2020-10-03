@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Checkout.Identity.Data.Contexts
 {
-    public class AuthDbContext : IdentityDbContext<ApplicationUserDto>
+    public class MicrosoftIdentityDbContext : IdentityDbContext<IdentityUser>
     {
-        public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
+        public MicrosoftIdentityDbContext(DbContextOptions<MicrosoftIdentityDbContext> options) : base(options)
         {
 
         }

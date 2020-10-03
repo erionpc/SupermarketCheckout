@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Checkout.Identity.Models;
@@ -22,16 +20,20 @@ namespace Checkout.Identity.Controllers
     [Route("api/authentication")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IIdentityService _identityService;
+        private readonly ISecurityTokenService _tokenService;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public AuthenticationController(IAuthService authService, 
-                                      IConfiguration configuration,
-                                      IMapper mapper)
+        public AuthenticationController(IIdentityService authService,
+                                        ISecurityTokenService tokenService,
+                                        IConfiguration configuration,
+                                        IMapper mapper)
         {
-            this._authService = authService ??
+            this._identityService = authService ??
                 throw new ArgumentNullException(nameof(authService));
+            this._tokenService = tokenService ??
+                throw new ArgumentNullException(nameof(tokenService));
             _configuration = configuration ??
                 throw new ArgumentNullException(nameof(configuration));
             _mapper = mapper ??
@@ -41,24 +43,23 @@ namespace Checkout.Identity.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
-            var user = await _authService.FindByNameAsync(model.Username);
+            var user = await _identityService.FindByNameAsync(model.Username);
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            var passwordCheck = await _authService.CheckPasswordAsync(user, model.Password);
+            var passwordCheck = await _identityService.CheckPasswordAsync(user, model.Password);
             if (!passwordCheck)
             {
                 return Unauthorized();
             }
 
-            var userRoles = await _authService.GetRolesAsync(user);
+            var userRoles = await _identityService.GetRolesAsync(user);
 
             var authClaims = new List<Claim>
             { 
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
             
             foreach (var userRole in userRoles)
@@ -66,22 +67,17 @@ namespace Checkout.Identity.Controllers
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            foreach (var audience in _configuration.GetSection("JWT:ValidAudiences").Get<string[]>())
+            var securityTokenClaims = _tokenService.GetSecurityTokenClaims();
+            if (securityTokenClaims?.Any() ?? false)
             {
-                authClaims.Add(new Claim(JwtRegisteredClaimNames.Aud, audience));
+                authClaims.AddRange(securityTokenClaims);
             }
 
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                expires: DateTime.Now.AddMinutes(int.Parse(_configuration["JWT:TokenExpiryMinutes"])),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
+            var token = _tokenService.GetSecurityToken(authClaims);
 
             return Ok(new
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
+                token = _tokenService.SerializeSecurityToken(token),
                 expiration = token.ValidTo
             });
         }
@@ -96,16 +92,16 @@ namespace Checkout.Identity.Controllers
                 return registrationResult.Item1;
             }
 
-            if (await _authService.RoleExistsAsync(UserRoles.Pos))
+            if (await _identityService.RoleExistsAsync(UserRoles.Pos))
             {
-                await _authService.AddToRoleAsync(registrationResult.Item2, UserRoles.Pos);
+                await _identityService.AddToRoleAsync(registrationResult.Item2, UserRoles.Pos);
             }
             else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponseDto(AuthResult.Error, "Role not defined!"));
+                return StatusCode(StatusCodes.Status500InternalServerError, new IdentityResponseDto(AuthResult.Error, "Role not defined!"));
             }
 
-            return Ok(new AuthResponseDto(AuthResult.Success, "User created successfully!"));
+            return Ok(new IdentityResponseDto(AuthResult.Success, "User created successfully!"));
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -118,34 +114,34 @@ namespace Checkout.Identity.Controllers
                 return inputValidationResult.Item1;
             }
             
-            if (await _authService.RoleExistsAsync(UserRoles.Admin))
+            if (await _identityService.RoleExistsAsync(UserRoles.Admin))
             {
-                await _authService.AddToRoleAsync(inputValidationResult.Item2, UserRoles.Admin);
+                await _identityService.AddToRoleAsync(inputValidationResult.Item2, UserRoles.Admin);
             }
             else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponseDto(AuthResult.Error, "Role not defined!"));
+                return StatusCode(StatusCodes.Status500InternalServerError, new IdentityResponseDto(AuthResult.Error, "Role not defined!"));
             }
 
-            return Ok(new AuthResponseDto(AuthResult.Success, "User created successfully!"));
+            return Ok(new IdentityResponseDto(AuthResult.Success, "User created successfully!"));
         }
 
-        private async Task<Tuple<IActionResult, ApplicationUserDto>> registerUser(RegistrationInfo registrationInput)
+        private async Task<Tuple<IActionResult, ApplicationUser>> registerUser(RegistrationInfo registrationInput)
         {
-            var userExists = await _authService.FindByNameAsync(registrationInput.Username);
+            var userExists = await _identityService.FindByNameAsync(registrationInput.Username);
             if (userExists != null)
             {
-                return new Tuple<IActionResult, ApplicationUserDto>(StatusCode(StatusCodes.Status500InternalServerError, new AuthResponseDto(AuthResult.Error, "User already exists!")), null);
+                return new Tuple<IActionResult, ApplicationUser>(StatusCode(StatusCodes.Status500InternalServerError, new IdentityResponseDto(AuthResult.Error, "User already exists!")), null);
             }
 
-            var user = _mapper.Map<RegistrationInfo, ApplicationUserDto>(registrationInput);
-            var result = await _authService.CreateAsync(user, registrationInput.Password);
+            var user = _mapper.Map<RegistrationInfo, ApplicationUser>(registrationInput);
+            var result = await _identityService.CreateAsync(user, registrationInput.Password);
             if (result.StatusEnum != AuthResult.Success)
             {
-                return new Tuple<IActionResult, ApplicationUserDto>(StatusCode(StatusCodes.Status500InternalServerError, new AuthResponseDto(AuthResult.Error, result.Message)), null);
+                return new Tuple<IActionResult, ApplicationUser>(StatusCode(StatusCodes.Status500InternalServerError, new IdentityResponseDto(AuthResult.Error, result.Message)), null);
             }
 
-            return new Tuple<IActionResult, ApplicationUserDto>(Ok(), user);
+            return new Tuple<IActionResult, ApplicationUser>(Ok(), user);
         }
     }
 }

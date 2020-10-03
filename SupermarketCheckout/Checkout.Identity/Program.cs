@@ -37,7 +37,7 @@ namespace Checkout.Identity
         {
             try
             {
-                var authDbContext = scope.ServiceProvider.GetService<AuthDbContext>();
+                var authDbContext = scope.ServiceProvider.GetService<MicrosoftIdentityDbContext>();
                 authDbContext.Database.Migrate();
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace Checkout.Identity
         {
             try
             {
-                var authManager = scope.ServiceProvider.GetService<IAuthService>();
+                var authManager = scope.ServiceProvider.GetService<IIdentityService>();
                 await authManager.InitialiseAuthData();
             }
             catch (Exception ex)

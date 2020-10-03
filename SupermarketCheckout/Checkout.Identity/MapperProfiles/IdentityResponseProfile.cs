@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Checkout.Identity.MapperProfiles
 {
-    public class IdentityResultProfile : Profile
+    public class IdentityResponseProfile : Profile
     {
-        public IdentityResultProfile()
+        public IdentityResponseProfile()
         {
-            CreateMap<IdentityResult, Models.AuthResponseDto>()
+            CreateMap<IdentityResult, Models.IdentityResponseDto>()
                 .ForMember(
                     dest => dest.StatusEnum,
                     opt => opt.MapFrom(src => src.Succeeded ? AuthResult.Success : AuthResult.Error))

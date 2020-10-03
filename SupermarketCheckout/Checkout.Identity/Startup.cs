@@ -38,16 +38,18 @@ namespace Checkout.Identity
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddTransient<IAuthService, MicrosoftIdentityAuthService>();
+            services.AddScoped<IIdentityService, MicrosoftIdentityService>();
 
-            services.AddDbContext<AuthDbContext>(options =>
+            services.AddScoped<ISecurityTokenService, JWTSecurityTokenService>();
+
+            services.AddDbContext<MicrosoftIdentityDbContext>(options =>
             {
                 options.UseSqlServer(_configuration.GetConnectionString("supermarketAuthDb"));
             });
 
             // identity management
-            services.AddIdentity<ApplicationUserDto, IdentityRole>()
-                .AddEntityFrameworkStores<AuthDbContext>()
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<MicrosoftIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
             // Adding Authentication  

@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Checkout.Identity.Data.Contexts;
 using Checkout.Identity.Models;
 using Checkout.Shared;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +13,18 @@ using System.Threading.Tasks;
 
 namespace Checkout.Identity.Services
 {
-    public class MicrosoftIdentityAuthService : IAuthService
+    public class MicrosoftIdentityService : IIdentityService
     {
-        private readonly UserManager<ApplicationUserDto> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private bool disposedValue;
 
-        public MicrosoftIdentityAuthService(UserManager<ApplicationUserDto> userManager,
-                                            RoleManager<IdentityRole> roleManager,
-                                            IConfiguration configuration,
-                                            IMapper mapper)
+        public MicrosoftIdentityService(UserManager<IdentityUser> userManager,
+                                        RoleManager<IdentityRole> roleManager,
+                                        IConfiguration configuration,
+                                        IMapper mapper)
         {
             this._userManager = userManager ??
                 throw new ArgumentNullException(nameof(userManager));
@@ -33,23 +36,34 @@ namespace Checkout.Identity.Services
                 throw new ArgumentNullException(nameof(mapper));
         }
 
-        public Task<ApplicationUserDto> FindByNameAsync(string username) =>
-            _userManager.FindByNameAsync(username);
+        public async Task<ApplicationUser> FindByNameAsync(string username) =>
+            _mapper.Map<IdentityUser, ApplicationUser>(await _userManager.FindByNameAsync(username));
 
-        public Task<bool> CheckPasswordAsync(ApplicationUserDto user, string password) =>
-            _userManager.CheckPasswordAsync(user, password);
+        public Task<bool> CheckPasswordAsync(ApplicationUser user, string password) =>
+            _userManager.CheckPasswordAsync(_mapper.Map<ApplicationUser, IdentityUser>(user), password);
 
-        public Task<IList<string>> GetRolesAsync(ApplicationUserDto user) =>
-            _userManager.GetRolesAsync(user);
+        public Task<IList<string>> GetRolesAsync(ApplicationUser user) =>
+            _userManager.GetRolesAsync(_mapper.Map<ApplicationUser, IdentityUser>(user));
 
         public Task<bool> RoleExistsAsync(string role) =>
             _roleManager.RoleExistsAsync(role);
 
-        public async Task<AuthResponseDto> AddToRoleAsync(ApplicationUserDto user, string role) =>
-            _mapper.Map<IdentityResult, AuthResponseDto>(await _userManager.AddToRoleAsync(user, role));
+        public async Task<IdentityResponseDto> AddToRoleAsync(ApplicationUser user, string role)
+        {
+            // to avoid EF tracking of the user
+            var identityUser = await _userManager.FindByNameAsync(user.UserName);
+            var identityResult = await _userManager.AddToRoleAsync(identityUser, role);
 
-        public async Task<AuthResponseDto> CreateAsync(ApplicationUserDto user, string password) =>
-            _mapper.Map<IdentityResult, AuthResponseDto>(await _userManager.CreateAsync(user, password));
+            return _mapper.Map<IdentityResult, IdentityResponseDto>(identityResult);
+        }
+
+        public async Task<IdentityResponseDto> CreateAsync(ApplicationUser user, string password)
+        {
+            var identityUser = _mapper.Map<ApplicationUser, IdentityUser>(user);
+            var identityResult = await _userManager.CreateAsync(identityUser, password);
+
+            return _mapper.Map<IdentityResult, IdentityResponseDto>(identityResult);
+        }
 
         public async Task InitialiseAuthData()
         {
@@ -59,27 +73,19 @@ namespace Checkout.Identity.Services
 
         private async Task initialiseRoles()
         {
-            try
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
             {
-                if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-                }
-                if (!await _roleManager.RoleExistsAsync(UserRoles.Pos))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.Pos));
-                }
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             }
-            catch (Exception)
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Pos))
             {
-                throw;
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Pos));
             }
         }
 
         private async Task initialiseUsers()
         {
             await initialiseUser(_configuration["Users:Admin:Username"], _configuration["Users:Admin:Password"], _configuration["Users:Admin:Email"], UserRoles.Admin);
-
 
             await initialiseUser(_configuration["Users:POS:Username"], _configuration["Users:POS:Password"], _configuration["Users:POS:Email"], UserRoles.Pos);
         }
@@ -90,7 +96,7 @@ namespace Checkout.Identity.Services
             
             if (userExists == null)
             {
-                var user = new ApplicationUserDto()
+                var user = new IdentityUser()
                 {
                     UserName = username,
                     Email = email,

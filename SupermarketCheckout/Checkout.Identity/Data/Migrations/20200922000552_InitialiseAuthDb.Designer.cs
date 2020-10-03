@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Checkout.Identity.Data.Migrations
 {
-    [DbContext(typeof(AuthDbContext))]
+    [DbContext(typeof(MicrosoftIdentityDbContext))]
     [Migration("20200922000552_InitialiseAuthDb")]
     partial class InitialiseAuthDb
     {
